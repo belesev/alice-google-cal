@@ -1,0 +1,40 @@
+{
+    "meta": {
+        "client_id": "ru.yandex.quasar.services/1.0 (yandex station; android 6.0.1)",
+        "interfaces": {
+            "payments": {},
+            "account_linking": {}
+        },
+        "locale": "ru-RU",
+        "timezone": "UTC"
+    },
+    "request": {
+        "original_utterance": "Тестовое событие",
+        "command": "тестовое событие",
+        "nlu": {
+            "entities": [],
+            "tokens": ["тестовое", "событие"],
+            "intents": {}
+        },
+        "markup": {
+            "dangerous_context": false
+        },
+        "type": "SimpleUtterance"
+    },
+    "session": {
+        "message_id": 1,
+        "new": false,
+        "session_id": "3ed31d39-3c82-4fef-bf10-ff6940716b0d",
+        "skill_id": "ace7a6af-075f-44fa-99a8-985ee10b217c",
+        "user_id": "AB405F4A264DE064487BC424D3D8D0A0958DCBADF48C2F065B73500D3BA15A19",
+        "application": {
+            "application_id": "AB405F4A264DE064487BC424D3D8D0A0958DCBADF48C2F065B73500D3BA15A19"
+        }
+    },
+    "state": {
+        "session": {},
+        "user": {},
+        "application": {"step": 1}
+    },
+    "version": "1.0"
+}
