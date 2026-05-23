@@ -6,7 +6,7 @@
             "account_linking": {}
         },
         "locale": "ru-RU",
-        "timezone": "UTC"
+        "timezone": "Europe/Moscow"
     },
     "request": {
         "original_utterance": "двадцать пятое мая в три часа дня",

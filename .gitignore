@@ -1,3 +1,4 @@
 credentials.json
 *.zip
 __pycache__/
+.claude/

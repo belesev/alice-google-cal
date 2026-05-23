@@ -5,7 +5,7 @@ import urllib.request
 from datetime import datetime, timedelta
 
 CALENDAR_ID = 'primary'
-TIMEZONE = os.environ.get('CALENDAR_TIMEZONE', 'Europe/Moscow')
+TIMEZONE_FALLBACK = os.environ.get('CALENDAR_TIMEZONE', 'Europe/Belgrade')
 
 CANCEL_WORDS = {'отмена', 'отменить', 'выход', 'стоп', 'хватит', 'назад'}
 
@@ -16,6 +16,7 @@ MONTHS_RU = [
 
 
 def handler(event, context):
+    timezone = event.get('meta', {}).get('timezone') or TIMEZONE_FALLBACK
     is_new_session = event.get('session', {}).get('new', False)
     state_bag = event.get('state', {})
     session_state = {} if is_new_session else (
@@ -76,7 +77,7 @@ def handler(event, context):
         # If the user also mentioned the time in the same phrase, finish right away.
         if 'hour' in val:
             state = {**session_state, 'date_said': raw}
-            return _finish(event, respond, state, date_parts, resolved, time_said=raw)
+            return _finish(event, respond, state, date_parts, resolved, timezone, time_said=raw)
 
         return respond(
             'В котором часу?',
@@ -96,7 +97,7 @@ def handler(event, context):
         base = datetime(date_parts['year'], date_parts['month'], date_parts['day'])
         resolved = _resolve(val, base)
         time_said = request.get('original_utterance', '').strip()
-        return _finish(event, respond, session_state, date_parts, resolved, time_said=time_said)
+        return _finish(event, respond, session_state, date_parts, resolved, timezone, time_said=time_said)
 
     # Fallback — reset
     return respond('Что-то пошло не так. Начнём заново: скажи название события.', {'step': 1})
@@ -135,14 +136,14 @@ def _resolve(val, base=None):
     return result
 
 
-def _finish(event, respond, session_state, date_parts, resolved, time_said=''):
+def _finish(event, respond, session_state, date_parts, resolved, timezone, time_said=''):
     title = session_state.get('title', 'Событие')
     start_dt = datetime(date_parts['year'], date_parts['month'], date_parts['day'],
                         resolved.hour, resolved.minute)
     end_dt = start_dt + timedelta(hours=1)
-    description = _build_description(event, session_state, time_said)
+    description = _build_description(event, session_state, time_said, timezone)
     try:
-        _create_event(title, start_dt, end_dt, description)
+        _create_event(title, start_dt, end_dt, description, timezone)
     except Exception as exc:
         return respond(f'Не удалось добавить событие: {exc}', {}, end=True)
 
@@ -155,7 +156,7 @@ def _finish(event, respond, session_state, date_parts, resolved, time_said=''):
     )
 
 
-def _build_description(event, session_state, time_said):
+def _build_description(event, session_state, time_said, timezone):
     sess = event.get('session', {})
     session_id = sess.get('session_id', '—')
     user_id = sess.get('user', {}).get('user_id', sess.get('user_id', '—'))
@@ -163,7 +164,7 @@ def _build_description(event, session_state, time_said):
     created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return '\n'.join([
         'Добавлено навыком Alice',
-        f'Время создания: {created_at} ({TIMEZONE})',
+        f'Время создания: {created_at} ({timezone})',
         f'Сессия:         {session_id}',
         f'Пользователь:   {user_id}',
         f'Навык:          {skill_id}',
@@ -187,13 +188,13 @@ def _get_access_token():
         return json.loads(resp.read())['access_token']
 
 
-def _create_event(title, start_dt, end_dt, description=''):
+def _create_event(title, start_dt, end_dt, description='', timezone=TIMEZONE_FALLBACK):
     token = _get_access_token()
     body = json.dumps({
         'summary':     f'[from Alice] {title}',
         'description': description,
-        'start': {'dateTime': start_dt.strftime('%Y-%m-%dT%H:%M:%S'), 'timeZone': TIMEZONE},
-        'end':   {'dateTime': end_dt.strftime('%Y-%m-%dT%H:%M:%S'),   'timeZone': TIMEZONE},
+        'start': {'dateTime': start_dt.strftime('%Y-%m-%dT%H:%M:%S'), 'timeZone': timezone},
+        'end':   {'dateTime': end_dt.strftime('%Y-%m-%dT%H:%M:%S'),   'timeZone': timezone},
     }).encode()
     url = f'https://www.googleapis.com/calendar/v3/calendars/{CALENDAR_ID}/events'
     req = urllib.request.Request(url, data=body, headers={

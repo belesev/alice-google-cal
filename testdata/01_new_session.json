@@ -7,7 +7,7 @@
             "screen": {}
         },
         "locale": "ru-RU",
-        "timezone": "UTC"
+        "timezone": "Europe/Moscow"
     },
     "request": {
         "original_utterance": "",
