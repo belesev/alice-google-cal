@@ -2,3 +2,4 @@ credentials.json
 *.zip
 __pycache__/
 .claude/
+client_secret_*

@@ -1,6 +1,6 @@
 import json
 import os
-import urllib.parse
+import urllib.error
 import urllib.request
 from datetime import datetime, timedelta
 
@@ -16,6 +16,19 @@ MONTHS_RU = [
 
 
 def handler(event, context):
+    access_token = event.get('session', {}).get('user', {}).get('access_token')
+    if not access_token:
+        return {
+            'version': event['version'],
+            'session': event['session'],
+            'response': {
+                'text': 'Чтобы добавлять события, привяжи аккаунт Google. '
+                        'Нажми кнопку «Привязать аккаунт» в приложении Яндекс.',
+                'end_session': True,
+            },
+            'start_account_linking': {},
+        }
+
     timezone = event.get('meta', {}).get('timezone') or TIMEZONE_FALLBACK
     is_new_session = event.get('session', {}).get('new', False)
     state_bag = event.get('state', {})
@@ -77,7 +90,7 @@ def handler(event, context):
         # If the user also mentioned the time in the same phrase, finish right away.
         if 'hour' in val:
             state = {**session_state, 'date_said': raw}
-            return _finish(event, respond, state, date_parts, resolved, timezone, time_said=raw)
+            return _finish(event, respond, state, date_parts, resolved, timezone, access_token, time_said=raw)
 
         return respond(
             'В котором часу?',
@@ -97,7 +110,7 @@ def handler(event, context):
         base = datetime(date_parts['year'], date_parts['month'], date_parts['day'])
         resolved = _resolve(val, base)
         time_said = request.get('original_utterance', '').strip()
-        return _finish(event, respond, session_state, date_parts, resolved, timezone, time_said=time_said)
+        return _finish(event, respond, session_state, date_parts, resolved, timezone, access_token, time_said=time_said)
 
     # Fallback — reset
     return respond('Что-то пошло не так. Начнём заново: скажи название события.', {'step': 1})
@@ -136,14 +149,14 @@ def _resolve(val, base=None):
     return result
 
 
-def _finish(event, respond, session_state, date_parts, resolved, timezone, time_said=''):
+def _finish(event, respond, session_state, date_parts, resolved, timezone, access_token, time_said=''):
     title = session_state.get('title', 'Событие')
     start_dt = datetime(date_parts['year'], date_parts['month'], date_parts['day'],
                         resolved.hour, resolved.minute)
     end_dt = start_dt + timedelta(hours=1)
     description = _build_description(event, session_state, time_said, timezone)
     try:
-        _create_event(title, start_dt, end_dt, description, timezone)
+        _create_event(title, start_dt, end_dt, description, timezone, access_token)
     except Exception as exc:
         return respond(f'Не удалось добавить событие: {exc}', {}, end=True)
 
@@ -176,20 +189,7 @@ def _build_description(event, session_state, time_said, timezone):
     ])
 
 
-def _get_access_token():
-    data = urllib.parse.urlencode({
-        'client_id':     os.environ['GOOGLE_CLIENT_ID'],
-        'client_secret': os.environ['GOOGLE_CLIENT_SECRET'],
-        'refresh_token': os.environ['GOOGLE_REFRESH_TOKEN'],
-        'grant_type':    'refresh_token',
-    }).encode()
-    req = urllib.request.Request('https://oauth2.googleapis.com/token', data=data)
-    with urllib.request.urlopen(req) as resp:
-        return json.loads(resp.read())['access_token']
-
-
-def _create_event(title, start_dt, end_dt, description='', timezone=TIMEZONE_FALLBACK):
-    token = _get_access_token()
+def _create_event(title, start_dt, end_dt, description, timezone, access_token):
     body = json.dumps({
         'summary':     f'[from Alice] {title}',
         'description': description,
@@ -198,7 +198,15 @@ def _create_event(title, start_dt, end_dt, description='', timezone=TIMEZONE_FAL
     }).encode()
     url = f'https://www.googleapis.com/calendar/v3/calendars/{CALENDAR_ID}/events'
     req = urllib.request.Request(url, data=body, headers={
-        'Authorization': f'Bearer {token}',
+        'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json',
     })
-    urllib.request.urlopen(req)
+    try:
+        urllib.request.urlopen(req)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode(errors='replace')
+        try:
+            msg = json.loads(body)['error']['message']
+        except Exception:
+            msg = body[:200]
+        raise RuntimeError(f'{e.code} {e.reason}: {msg}') from None

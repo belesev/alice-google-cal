@@ -27,6 +27,9 @@
         "session_id": "3ed31d39-3c82-4fef-bf10-ff6940716b0d",
         "skill_id": "ace7a6af-075f-44fa-99a8-985ee10b217c",
         "user_id": "AB405F4A264DE064487BC424D3D8D0A0958DCBADF48C2F065B73500D3BA15A19",
+        "user": {
+            "access_token": "ya-test-fake-google-token"
+        },
         "application": {
             "application_id": "AB405F4A264DE064487BC424D3D8D0A0958DCBADF48C2F065B73500D3BA15A19"
         }
