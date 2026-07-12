@@ -5,7 +5,7 @@ import urllib.request
 from datetime import datetime, timedelta
 
 CALENDAR_ID = 'primary'
-TIMEZONE_FALLBACK = os.environ.get('CALENDAR_TIMEZONE', 'Europe/Belgrade')
+TIMEZONE_FALLBACK = os.environ.get('CALENDAR_TIMEZONE', 'Europe/Moscow')
 
 CANCEL_WORDS = {'отмена', 'отменить', 'выход', 'стоп', 'хватит', 'назад'}
 
