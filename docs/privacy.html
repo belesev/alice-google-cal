@@ -23,7 +23,7 @@
 <body>
 
   <h1>Политика конфиденциальности</h1>
-  <p class="meta">Навык «Google Calendar» для Яндекс Алисы &nbsp;·&nbsp; Последнее обновление: 25 мая 2026 г.</p>
+  <p class="meta">Навык «Google Calendar» для Яндекс Алисы &nbsp;·&nbsp; Последнее обновление: 12 июля 2026 г.</p>
 
   <h2>Что делает навык</h2>
   <p>
@@ -31,14 +31,18 @@
     голосовыми командами через Яндекс Алису.
   </p>
 
-  <h2>Какие данные используются</h2>
+  <h2>Какие данные Google используются</h2>
   <p>
     С вашего разрешения навык получает доступ к Google Календарю через стандартный
     протокол OAuth 2.0 с областью действия
     <code>https://www.googleapis.com/auth/calendar.events</code>.
-    Этот доступ позволяет только <strong>создавать</strong> события в вашем основном
-    календаре — навык не читает, не изменяет и не удаляет существующие события.
   </p>
+  <p>Приложение получает доступ к следующим данным вашего аккаунта Google:</p>
+  <ul>
+    <li><strong>Календарные события</strong> — только запись: навык может создавать новые события в вашем основном календаре. Навык не читает, не изменяет и не удаляет существующие события.</li>
+    <li><strong>OAuth-токен</strong> — краткосрочный токен доступа, выдаваемый платформой Яндекс Диалоги для аутентификации каждого запроса. Токен не сохраняется разработчиком.</li>
+  </ul>
+  <p>Никакие другие данные Google (имя, email, контакты, файлы и т.д.) не запрашиваются и не используются.</p>
 
   <h2>Хранение данных</h2>
   <p>
@@ -46,6 +50,37 @@
     OAuth-токен передаётся платформой Яндекс Диалоги непосредственно в момент
     запроса и нигде не сохраняется разработчиком.
   </p>
+
+  <h2>Сроки хранения и удаление данных</h2>
+  <p>
+    Поскольку навык не сохраняет никаких пользовательских данных, срок хранения
+    равен нулю: OAuth-токен существует только в оперативной памяти на время
+    обработки одного запроса и автоматически уничтожается по его завершении.
+  </p>
+  <p>
+    Если вы хотите полностью прекратить доступ навыка к вашему аккаунту Google,
+    отзовите авторизацию в настройках Google:
+    <a href="https://myaccount.google.com/permissions" target="_blank">myaccount.google.com/permissions</a>.
+    После отзыва никакие данные, связанные с вашим аккаунтом, у разработчика
+    не остаются — удалять нечего.
+  </p>
+  <p>
+    По любым запросам, связанным с удалением данных, обращайтесь на
+    <a href="mailto:alicecalendarassistant@gmail.com">alicecalendarassistant@gmail.com</a> — ответ будет дан
+    в течение 30 дней.
+  </p>
+
+  <h2>Защита данных</h2>
+  <p>
+    Поскольку навык не хранит никаких пользовательских данных, поверхность атаки
+    сведена к минимуму. Тем не менее на каждом уровне применяются меры защиты:
+  </p>
+  <ul>
+    <li><strong>Шифрование при передаче.</strong> Все запросы между Яндекс Алисой, навыком и Google Calendar API выполняются исключительно по HTTPS/TLS — данные не могут быть перехвачены в открытом виде.</li>
+    <li><strong>Минимальные права доступа.</strong> Запрашивается единственная область OAuth <code>calendar.events</code> — наименьший набор прав, необходимый для создания событий.</li>
+    <li><strong>Отсутствие хранилища.</strong> OAuth-токен никогда не записывается на диск и не сохраняется в базе данных, что исключает его утечку из систем разработчика.</li>
+    <li><strong>Краткосрочные токены.</strong> Используются только краткосрочные токены доступа, выдаваемые Яндекс Диалогами на каждый запрос; долгосрочные токены обновления разработчиком не хранятся.</li>
+  </ul>
 
   <h2>Передача данных третьим лицам</h2>
   <p>
@@ -64,13 +99,13 @@
   <h2>Контакт</h2>
   <p>
     По вопросам конфиденциальности пишите на
-    <a href="mailto:belesev@gmail.com">belesev@gmail.com</a>.
+    <a href="mailto:alicecalendarassistant@gmail.com">alicecalendarassistant@gmail.com</a>.
   </p>
 
   <hr>
 
   <h1 lang="en">Privacy Policy</h1>
-  <p class="meta" lang="en">«Google Calendar» skill for Yandex Alice &nbsp;·&nbsp; Last updated: May 25, 2026</p>
+  <p class="meta" lang="en">«Google Calendar» skill for Yandex Alice &nbsp;·&nbsp; Last updated: July 12, 2026</p>
 
   <h2 lang="en">What the skill does</h2>
   <p lang="en">
@@ -78,14 +113,18 @@
     using voice commands via Yandex Alice.
   </p>
 
-  <h2 lang="en">Data accessed</h2>
+  <h2 lang="en">Google user data accessed</h2>
   <p lang="en">
     With your permission, the skill accesses Google Calendar through the standard
     OAuth 2.0 protocol with the scope
     <code>https://www.googleapis.com/auth/calendar.events</code>.
-    This permission allows the skill to <strong>create</strong> events in your
-    primary calendar only — it cannot read, modify, or delete existing events.
   </p>
+  <p lang="en">The following Google account data is accessed by this application:</p>
+  <ul lang="en">
+    <li><strong>Calendar events</strong> — write-only: the skill can create new events in your primary calendar. It cannot read, modify, or delete existing events.</li>
+    <li><strong>OAuth access token</strong> — a short-lived token provided by the Yandex Dialogs platform to authenticate each request. The token is never persisted by the developer.</li>
+  </ul>
+  <p lang="en">No other Google data (name, email address, contacts, files, etc.) is requested or used.</p>
 
   <h2 lang="en">Data storage</h2>
   <p lang="en">
@@ -93,6 +132,37 @@
     The OAuth token is provided by the Yandex Dialogs platform on each request
     and is never persisted by the developer.
   </p>
+
+  <h2 lang="en">Data retention and deletion</h2>
+  <p lang="en">
+    Because the skill stores no user data, the retention period is zero: the OAuth
+    token exists only in memory for the duration of a single request and is
+    automatically discarded once the request is complete.
+  </p>
+  <p lang="en">
+    If you wish to fully terminate the skill's access to your Google account,
+    revoke the authorization in your Google Account settings:
+    <a href="https://myaccount.google.com/permissions" target="_blank">myaccount.google.com/permissions</a>.
+    After revoking, no data associated with your account remains with the developer —
+    there is nothing left to delete.
+  </p>
+  <p lang="en">
+    For any data deletion requests, contact
+    <a href="mailto:alicecalendarassistant@gmail.com">alicecalendarassistant@gmail.com</a> — you will receive a
+    response within 30 days.
+  </p>
+
+  <h2 lang="en">Data protection</h2>
+  <p lang="en">
+    Because the skill stores no user data, the attack surface is minimal by design.
+    The following security measures are in place at every layer:
+  </p>
+  <ul lang="en">
+    <li><strong>Encryption in transit.</strong> All communication between Yandex Alice, the skill, and the Google Calendar API is conducted exclusively over HTTPS/TLS, ensuring data cannot be intercepted in plain text.</li>
+    <li><strong>Least-privilege access.</strong> Only the single OAuth scope <code>calendar.events</code> is requested — the minimum permission required to create events.</li>
+    <li><strong>No data at rest.</strong> The OAuth token is never written to disk or stored in any database, eliminating the risk of a credential leak from the developer's infrastructure.</li>
+    <li><strong>Short-lived tokens.</strong> Only short-lived access tokens issued by Yandex Dialogs per request are used; no long-lived refresh tokens are retained by the developer.</li>
+  </ul>
 
   <h2 lang="en">Third-party sharing</h2>
   <p lang="en">
@@ -111,7 +181,7 @@
   <h2 lang="en">Contact</h2>
   <p lang="en">
     For any privacy-related questions, contact
-    <a href="mailto:belesev@gmail.com">belesev@gmail.com</a>.
+    <a href="mailto:alicecalendarassistant@gmail.com">alicecalendarassistant@gmail.com</a>.
   </p>
 
 </body>
