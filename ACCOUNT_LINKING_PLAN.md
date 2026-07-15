@@ -70,7 +70,7 @@ In the skill settings, open the **Account Linking** section and fill in:
 
 | Field | Value |
 |-------|-------|
-| Authorization URL | `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar.events&access_type=offline&prompt=consent` |
+| Authorization URL | `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/calendar.events.owned&access_type=offline&prompt=consent` |
 | Token URL | `https://oauth2.googleapis.com/token` |
 | Client ID | your Google OAuth2 client ID |
 | Client Secret | your Google OAuth2 client secret |
@@ -146,7 +146,7 @@ obsolete.
 ## Security Considerations
 
 - The access token in `event["session"]["user"]["access_token"]` is scoped to
-  `calendar.events` only — it cannot read contacts, drive, or other Google data.
+  `calendar.events.owned` only — it cannot read contacts, drive, or other Google data.
 - Tokens are stored by Yandex, not by this skill. The skill never persists tokens.
 - If a user revokes access in their [Google Account settings](https://myaccount.google.com/permissions),
   the next request will have no token and the skill will prompt re-linking.

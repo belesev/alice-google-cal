@@ -35,7 +35,7 @@
   <p>
     С вашего разрешения навык получает доступ к Google Календарю через стандартный
     протокол OAuth 2.0 с областью действия
-    <code>https://www.googleapis.com/auth/calendar.events</code>.
+    <code>https://www.googleapis.com/auth/calendar.events.owned</code>.
   </p>
   <p>Приложение получает доступ к следующим данным вашего аккаунта Google:</p>
   <ul>
@@ -77,7 +77,7 @@
   </p>
   <ul>
     <li><strong>Шифрование при передаче.</strong> Все запросы между Яндекс Алисой, навыком и Google Calendar API выполняются исключительно по HTTPS/TLS — данные не могут быть перехвачены в открытом виде.</li>
-    <li><strong>Минимальные права доступа.</strong> Запрашивается единственная область OAuth <code>calendar.events</code> — наименьший набор прав, необходимый для создания событий.</li>
+    <li><strong>Минимальные права доступа.</strong> Запрашивается единственная область OAuth <code>calendar.events.owned</code> — наименьший набор прав, необходимый для создания событий.</li>
     <li><strong>Отсутствие хранилища.</strong> OAuth-токен никогда не записывается на диск и не сохраняется в базе данных, что исключает его утечку из систем разработчика.</li>
     <li><strong>Краткосрочные токены.</strong> Используются только краткосрочные токены доступа, выдаваемые Яндекс Диалогами на каждый запрос; долгосрочные токены обновления разработчиком не хранятся.</li>
   </ul>
@@ -117,7 +117,7 @@
   <p lang="en">
     With your permission, the skill accesses Google Calendar through the standard
     OAuth 2.0 protocol with the scope
-    <code>https://www.googleapis.com/auth/calendar.events</code>.
+    <code>https://www.googleapis.com/auth/calendar.events.owned</code>.
   </p>
   <p lang="en">The following Google account data is accessed by this application:</p>
   <ul lang="en">
@@ -159,7 +159,7 @@
   </p>
   <ul lang="en">
     <li><strong>Encryption in transit.</strong> All communication between Yandex Alice, the skill, and the Google Calendar API is conducted exclusively over HTTPS/TLS, ensuring data cannot be intercepted in plain text.</li>
-    <li><strong>Least-privilege access.</strong> Only the single OAuth scope <code>calendar.events</code> is requested — the minimum permission required to create events.</li>
+    <li><strong>Least-privilege access.</strong> Only the single OAuth scope <code>calendar.events.owned</code> is requested — the minimum permission required to create events.</li>
     <li><strong>No data at rest.</strong> The OAuth token is never written to disk or stored in any database, eliminating the risk of a credential leak from the developer's infrastructure.</li>
     <li><strong>Short-lived tokens.</strong> Only short-lived access tokens issued by Yandex Dialogs per request are used; no long-lived refresh tokens are retained by the developer.</li>
   </ul>
