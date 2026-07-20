@@ -9,6 +9,22 @@ TIMEZONE_FALLBACK = os.environ.get('CALENDAR_TIMEZONE', 'Europe/Moscow')
 
 CANCEL_WORDS = {'отмена', 'отменить', 'выход', 'стоп', 'хватит', 'назад'}
 
+HELP_WORDS = {'помощь', 'помоги', 'help'}
+SKILLS_WORDS = {'что ты умеешь', 'что умеешь', 'твои возможности', 'возможности'}
+
+SKILLS_TEXT = (
+    'Я умею добавлять события в твой Google Календарь. '
+    'Скажи мне название события, дату и время — и я создам запись.'
+)
+
+HELP_TEXT = (
+    'Я добавляю события в Google Календарь. Вот как это работает:\n'
+    '1. Скажи название события, например: «встреча с врачом».\n'
+    '2. Назови дату: «завтра», «двадцать пятое мая» или «в пятницу».\n'
+    '3. Назови время: «в три часа дня» или «в 14:00».\n'
+    'Чтобы отменить — скажи «отмена».'
+)
+
 MONTHS_RU = [
     'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
     'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря',
@@ -54,6 +70,12 @@ def handler(event, context):
 
     if utterance in CANCEL_WORDS:
         return respond('Хорошо, отменила. Если нужно — снова скажи «добавь событие».', {}, end=True)
+
+    if utterance in HELP_WORDS:
+        return respond(HELP_TEXT, session_state)
+
+    if utterance in SKILLS_WORDS:
+        return respond(SKILLS_TEXT, session_state)
 
     step = session_state.get('step', 0)
 
