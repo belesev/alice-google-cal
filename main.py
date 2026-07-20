@@ -176,11 +176,8 @@ def _build_description(event, session_state, time_said, timezone):
     skill_id = sess.get('skill_id', '—')
     created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return '\n'.join([
-        'Добавлено навыком Alice',
+        'Добавлено навыком "Google calendar" на умной колонке "Алиса"',
         f'Время создания: {created_at} ({timezone})',
-        f'Сессия:         {session_id}',
-        f'Пользователь:   {user_id}',
-        f'Навык:          {skill_id}',
         '',
         'Что было сказано:',
         f'  Название: «{session_state.get("title", "—")}»',
@@ -191,7 +188,7 @@ def _build_description(event, session_state, time_said, timezone):
 
 def _create_event(title, start_dt, end_dt, description, timezone, access_token):
     body = json.dumps({
-        'summary':     f'[from Alice] {title}',
+        'summary':     f'{title}',
         'description': description,
         'start': {'dateTime': start_dt.strftime('%Y-%m-%dT%H:%M:%S'), 'timeZone': timezone},
         'end':   {'dateTime': end_dt.strftime('%Y-%m-%dT%H:%M:%S'),   'timeZone': timezone},
